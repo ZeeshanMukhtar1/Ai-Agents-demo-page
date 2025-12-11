@@ -123,11 +123,20 @@ export const DemoCard = () => {
         console.log("[CALL ENDED] Call has ended");
         console.log("[STATUS] Reset to Ready state");
       });
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
       client.on("error", (error: any) => {
         console.error("[CLIENT ERROR] Retell client encountered an error:");
         console.error(error);
+
+        // Log the full error object as a string for easy debugging
+        if (typeof error === "object" && error !== null) {
+          console.log(
+            "👉 Full Error Details (STRINGIFIED):",
+            JSON.stringify(error, null, 2)
+          );
+          console.log("Error Name/Code:", error.name || error.code || "N/A");
+        }
+
         setIsCalling(false);
         setCallStatus("Error");
         console.log("[STATUS] Changed to Error state");
