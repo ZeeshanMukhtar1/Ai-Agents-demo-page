@@ -10,8 +10,7 @@ const VELTRA_PURPLE = "#A259FF";
 type CallStatus = "Ready" | "Connecting..." | "Active" | "Error";
 
 // This is the URL of my deployed Supabase Edge Function (reate-web-call)
-const API_ENDPOINT =
-  "https://rscawvacjytjdqlkmerj.supabase.co/functions/v1/reate-web-call";
+const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 export const DemoCard = () => {
   // 3. Setup State and Refs
@@ -76,7 +75,7 @@ export const DemoCard = () => {
       console.log("[TOKEN REQUEST] Fetching access token from backend...");
       console.log(`[TOKEN REQUEST] Endpoint: ${API_ENDPOINT}`);
 
-      const tokenResponse = await fetch(API_ENDPOINT, {
+      const tokenResponse = await fetch(API_ENDPOINT!, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
