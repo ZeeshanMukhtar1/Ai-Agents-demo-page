@@ -10,7 +10,8 @@ const VELTRA_PURPLE = "#A259FF";
 type CallStatus = "Ready" | "Connecting..." | "Active" | "Error";
 
 // This is the URL of my deployed Supabase Edge Function (reate-web-call)
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+const API_ENDPOINT =
+  "https://rscawvacjytjdqlkmerj.supabase.co/functions/v1/reate-web-call";
 
 export const DemoCard = () => {
   // 3. Setup State and Refs
@@ -33,55 +34,55 @@ export const DemoCard = () => {
   const startCall = useCallback(async () => {
     // END CALL Logic
     if (isCalling) {
-      console.log("[END CALL] User initiated call termination");
+      console.log("🛑 [END CALL] User initiated call termination");
 
       try {
         if (clientRef.current) {
-          console.log("[END CALL] Stopping call via SDK...");
+          console.log("📞 [END CALL] Stopping call via SDK...");
           clientRef.current.stopCall();
-          console.log("[END CALL] Call stopped successfully");
+          console.log("✅ [END CALL] Call stopped successfully");
         } else {
-          console.warn("[END CALL] No active client reference found");
+          console.warn("⚠️ [END CALL] No active client reference found");
         }
       } catch (error) {
-        console.error("[END CALL] Error stopping call:", error);
+        console.error("❌ [END CALL] Error stopping call:", error);
       } finally {
         setIsCalling(false);
         setCallStatus("Ready");
-        console.log("[END CALL] Call state reset to Ready");
+        console.log("🏁 [END CALL] Call state reset to Ready");
       }
       return;
     }
 
     //  START CALL Logic
-    console.log("[START CALL] Initiating call sequence...");
+    console.log("🚀 [START CALL] Initiating call sequence...");
 
     // Ensure the client is ready
     if (typeof RetellWebClient === "undefined") {
       console.error(
-        "[SDK CHECK] RetellWebClient is unavailable. SDK installation may have failed."
+        "❌ [SDK CHECK] RetellWebClient is unavailable. SDK installation may have failed."
       );
       setCallStatus("Error");
       return;
     }
-    console.log("[SDK CHECK] RetellWebClient is available");
+    console.log("✅ [SDK CHECK] RetellWebClient is available");
 
     setIsCalling(true);
     setCallStatus("Connecting...");
-    console.log("[STATUS] Changed to 'Connecting...'");
+    console.log("🔄 [STATUS] Changed to 'Connecting...'");
 
     try {
       // 1. Fetch access token from my Supabase Edge Function
-      console.log("[TOKEN REQUEST] Fetching access token from backend...");
-      console.log(`[TOKEN REQUEST] Endpoint: ${API_ENDPOINT}`);
+      console.log("🌐 [TOKEN REQUEST] Fetching access token from backend...");
+      console.log(`📍 [TOKEN REQUEST] Endpoint: ${API_ENDPOINT}`);
 
-      const tokenResponse = await fetch(API_ENDPOINT!, {
+      const tokenResponse = await fetch(API_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
 
       console.log(
-        `[TOKEN RESPONSE] Status: ${tokenResponse.status} ${tokenResponse.statusText}`
+        `📥 [TOKEN RESPONSE] Status: ${tokenResponse.status} ${tokenResponse.statusText}`
       );
 
       const tokenData = await tokenResponse.json();
@@ -89,13 +90,13 @@ export const DemoCard = () => {
       if (!tokenResponse.ok || !tokenData.access_token) {
         const errorMsg =
           tokenData.error || "Failed to get access token from backend.";
-        console.error("[TOKEN ERROR]", errorMsg);
+        console.error("❌ [TOKEN ERROR]", errorMsg);
         throw new Error(errorMsg);
       }
 
-      console.log("[TOKEN SUCCESS] Access token received");
+      console.log("✅ [TOKEN SUCCESS] Access token received");
       console.log(
-        "[TOKEN] Token length:",
+        "🔑 [TOKEN] Token length:",
         tokenData.access_token.length,
         "characters"
       );
@@ -105,68 +106,59 @@ export const DemoCard = () => {
       const client = new RetellWebClient();
       clientRef.current = client;
       console.log(
-        "[CLIENT INIT] RetellWebClient initialized and stored in ref"
+        "✅ [CLIENT INIT] RetellWebClient initialized and stored in ref"
       );
 
       // 3. Set up event listeners for status updates (CRITICAL for a reliable UI)
-      console.log("[EVENT SETUP] Registering event listeners...");
+      console.log("👂 [EVENT SETUP] Registering event listeners...");
 
       client.on("connection:established", () => {
         setCallStatus("Active");
-        console.log("[CONNECTION] Connection established successfully!");
-        console.log("[CALL STATUS] AI agent should now be speaking");
+        console.log("🟢 [CONNECTION] Connection established successfully!");
+        console.log("🎙️ [CALL STATUS] AI agent should now be speaking");
       });
 
       client.on("call:ended", () => {
         setIsCalling(false);
         setCallStatus("Ready");
-        console.log("[CALL ENDED] Call has ended");
-        console.log("[STATUS] Reset to Ready state");
+        console.log("📞 [CALL ENDED] Call has ended");
+        console.log("🏁 [STATUS] Reset to Ready state");
       });
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       client.on("error", (error: any) => {
-        console.error("[CLIENT ERROR] Retell client encountered an error:");
+        console.error("❌ [CLIENT ERROR] Retell client encountered an error:");
         console.error(error);
-
-        // Log the full error object as a string for easy debugging
-        if (typeof error === "object" && error !== null) {
-          console.log(
-            "👉 Full Error Details (STRINGIFIED):",
-            JSON.stringify(error, null, 2)
-          );
-          console.log("Error Name/Code:", error.name || error.code || "N/A");
-        }
-
         setIsCalling(false);
         setCallStatus("Error");
-        console.log("[STATUS] Changed to Error state");
+        console.log("🔴 [STATUS] Changed to Error state");
       });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
       client.on("update", (update: any) => {
         // You can monitor the transcript here
-        // console.log("[TRANSCRIPT] Update:", update.transcript);
+        // console.log("📝 [TRANSCRIPT] Update:", update.transcript);
       });
 
-      console.log("[EVENT SETUP] All event listeners registered");
+      console.log("✅ [EVENT SETUP] All event listeners registered");
 
       // 4. Start the call using the access token
-      console.log("[CALL START] Initiating call with access token...");
+      console.log("📞 [CALL START] Initiating call with access token...");
       client.startCall({ accessToken: tokenData.access_token });
-      console.log("[CALL START] startCall() method executed");
-      console.log("[WAITING] Waiting for connection establishment...");
+      console.log("✅ [CALL START] startCall() method executed");
+      console.log("⏳ [WAITING] Waiting for connection establishment...");
     } catch (error) {
-      console.error("[FATAL ERROR] Error during call initiation:");
+      console.error("❌ [FATAL ERROR] Error during call initiation:");
       console.error(error);
 
       if (error instanceof Error) {
-        console.error("[ERROR DETAILS] Message:", error.message);
-        console.error("[ERROR DETAILS] Stack:", error.stack);
+        console.error("📝 [ERROR DETAILS] Message:", error.message);
+        console.error("📝 [ERROR DETAILS] Stack:", error.stack);
       }
 
       setIsCalling(false);
       setCallStatus("Error");
-      console.log("[STATUS] Changed to Error state due to exception");
+      console.log("🔴 [STATUS] Changed to Error state due to exception");
     }
   }, [isCalling]);
 
