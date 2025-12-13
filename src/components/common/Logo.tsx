@@ -1,17 +1,25 @@
 import Link from "next/link";
+import React from "react";
 
-const VeltraLogoIcon = () => (
+const FramerLogoIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 32 32"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
     className="w-8 h-8 flex-shrink-0"
     fill="currentColor"
+    enableBackground="new 0 0 512 512"
+    xmlSpace="preserve"
   >
-    <path d="M16 0L4 12V20L16 32L28 20V12L16 0Z M16 4.3L25.3 12L16 19.7L6.7 12L16 4.3Z" />
-    <path
-      d="M16 19.7L6.7 12L16 4.3L25.3 12L16 19.7Z"
-      fill="#000000"
-    />{" "}
+    <g fill="currentColor">
+      <path d="M2 18c0-1.886 0-2.828.586-3.414C3.172 14 4.114 14 6 14s2.828 0 3.414.586C10 15.172 10 16.114 10 18s0 2.828-.586 3.414C8.828 22 7.886 22 6 22s-2.828 0-3.414-.586C2 20.828 2 19.886 2 18z" />
+      <path
+        fillRule="evenodd"
+        d="M3.464 3.464C2 4.93 2 7.286 2 12v1.138c.509-.333 1.069-.48 1.606-.551.645-.087 1.439-.087 2.305-.087h.179c.865 0 1.659 0 2.304.087.711.095 1.463.32 2.08.938.619.618.844 1.37.94 2.08.086.646.086 1.44.086 2.305v.18c0 .865 0 1.659-.087 2.304-.072.537-.218 1.097-.55 1.605L12 22c4.714 0 7.071 0 8.536-1.464C22 19.07 22 16.713 22 12c0-4.714 0-7.071-1.464-8.536C19.07 2 16.713 2 12 2 7.286 2 4.929 2 3.464 3.464zM15.75 12.75a.75.75 0 0 0 0-1.5h-1.94l3.72-3.72a.75.75 0 0 0-1.06-1.06l-3.72 3.72V8.25a.75.75 0 0 0-1.5 0V12c0 .414.336.75.75.75z"
+        clipRule="evenodd"
+      />
+    </g>
   </svg>
 );
 
@@ -20,7 +28,7 @@ const Logo = () => (
     href="/"
     className="flex items-center space-x-2 text-white hover:text-gray-200 transition"
   >
-    <VeltraLogoIcon />
+    <FramerLogoIcon />
 
     {/* Text Element: Veltra AI */}
     <div
